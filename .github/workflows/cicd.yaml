@@ -52,6 +52,28 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Run Docker Image to serve users
+      - name: Set Image Variable
+        id: set-image
         run: |
-          docker run -d -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" -e AWS_DEFAULT_REGION="${{ secrets.AWS_DEFAULT_REGION }}" -e PINECONE_API_KEY="${{ secrets.PINECONE_API_KEY }}" -e OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" -p 5000:5000 "${{ steps.login-ecr.outputs.registry }}"/"${{ secrets.ECR_REPO }}":latest
+          echo "IMAGE=${{ steps.login-ecr.outputs.registry }}/${{ secrets.ECR_REPO }}:latest" >> $GITHUB_ENV
+
+      - name: Pull the latest Docker image
+        run: |
+          docker pull ${{ env.IMAGE }}
+
+      - name: Stop and remove existing container (if running)
+        continue-on-error: true
+        run: |
+          docker stop myapp-container || true
+          docker rm myapp-container || true
+
+      - name: Run the new Docker image
+        run: |
+          docker run -d --name myapp-container \
+            -e AWS_ACCESS_KEY_ID="${{ secrets.AWS_ACCESS_KEY_ID }}" \
+            -e AWS_SECRET_ACCESS_KEY="${{ secrets.AWS_SECRET_ACCESS_KEY }}" \
+            -e AWS_DEFAULT_REGION="${{ secrets.AWS_DEFAULT_REGION }}" \
+            -e PINECONE_API_KEY="${{ secrets.PINECONE_API_KEY }}" \
+            -e OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
+            -p 5000:5000 \
+            ${{ env.IMAGE }}
