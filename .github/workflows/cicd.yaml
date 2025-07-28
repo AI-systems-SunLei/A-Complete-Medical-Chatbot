@@ -84,6 +84,7 @@ jobs:
             -e AWS_DEFAULT_REGION="${{ secrets.AWS_DEFAULT_REGION }}" \
             -e PINECONE_API_KEY="${{ secrets.PINECONE_API_KEY }}" \
             -e OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
+            -e OPENAI_BASE_URL="${{ secrets.OPENAI_BASE_URL }}" \
             -p 5000:5000 \
             ${{ env.IMAGE }}
 
