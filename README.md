@@ -1,4 +1,8 @@
 ### Build-a-Complete-Medical-Chatbot-with-LLMs-LangChain-Pinecone-Flask-AWS
+
+You can open the link to try it out: http://34.203.210.79:5000/
+Please note: The first time you use it, you may need to wait for the embedding model to download. This may not be a great experience, but after all, it's a free model, so let's make do with it for now.
+
 <img width="917" height="631" alt="QQ20250730-150216" src="https://github.com/user-attachments/assets/68a7d97f-f4cd-4276-b987-e765b100c6f4" />
 
 # How to run?
